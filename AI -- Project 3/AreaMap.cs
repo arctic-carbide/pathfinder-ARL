@@ -4,10 +4,8 @@ using System.Text;
 
 namespace AI____Project_3
 {
-    class Agent
+    public abstract class AreaMap
     {
-
-
 
     }
 }

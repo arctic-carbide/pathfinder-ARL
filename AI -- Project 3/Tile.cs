@@ -4,10 +4,8 @@ using System.Text;
 
 namespace AI____Project_3
 {
-    class Agent
+    class Tile
     {
-
-
-
+        Policy p;
     }
 }

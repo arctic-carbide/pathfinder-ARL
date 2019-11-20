@@ -4,10 +4,9 @@ using System.Text;
 
 namespace AI____Project_3
 {
-    class Agent
+    public class MoveEast : Policy
     {
-
-
+        public override string Direction => ">>>>";
 
     }
 }
