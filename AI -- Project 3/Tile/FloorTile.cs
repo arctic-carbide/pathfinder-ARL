@@ -6,6 +6,7 @@ namespace AI____Project_3
 {
     class FloorTile : Tile
     {
-        public override string TileSymbol => throw new NotImplementedException();
+        public override char Symbol => '.';
+        public override string PolicySymbol => throw new NotImplementedException();
     }
 }

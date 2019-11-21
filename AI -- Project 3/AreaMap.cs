@@ -6,6 +6,9 @@ namespace AI____Project_3
 {
     public class AreaMap
     {
+        Dictionary<Tile, int[]> rewards;
+        Dictionary<Tile, int[]> frequencies;
+        Dictionary<Tile, Policy> policies;
 
         Tile[,] tiles;
 
@@ -23,12 +26,20 @@ namespace AI____Project_3
             {
                 for (int c = 0; c < col; c++)
                 {
-                    tiles
+                    // TODO: INITIALIZE TILES ACCORDING TO FILE MAP
                 }
             }
         }
 
+        public void SetPolicy(Tile t, Policy p)
+        {
+            policies[t] = p;
+        }
 
+        public void IncreaseFrequency(Tile t, Policy p)
+        {
+
+        }
 
     }
 }

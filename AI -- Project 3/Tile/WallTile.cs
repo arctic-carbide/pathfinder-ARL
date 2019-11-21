@@ -6,6 +6,6 @@ namespace AI____Project_3
 {
     class WallTile : Tile
     {
-        public override string TileSymbol => "####";
+        public override char Symbol => '#';
     }
 }
