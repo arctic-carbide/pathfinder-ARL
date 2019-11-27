@@ -4,10 +4,9 @@ using System.Text;
 
 namespace AI____Project_3
 {
-    class MoveNorth : Policy
+    class Stay : Policy
     {
-        public override string Direction => "^^^^";
-        public override int Reward => -2;
+        public override string Direction => "GGGG";
         public override void Behavior()
         {
             throw new NotImplementedException();

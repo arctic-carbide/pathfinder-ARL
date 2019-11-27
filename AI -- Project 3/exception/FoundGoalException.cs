@@ -4,8 +4,8 @@ using System.Text;
 
 namespace AI____Project_3
 {
-    class Stay : Policy
+    class FoundGoalException : Exception
     {
-        public override string Direction => "GGGG";
+        public FoundGoalException() : base("YOU FOUND THE GOAL") { }
     }
 }
