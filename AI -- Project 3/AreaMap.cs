@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
+
+// AUTHOR: MITCHELL MYERS
+// DATE: 11/29/2019
+// TIME: 2:48 AM
 
 namespace AI____Project_3
 {
@@ -21,8 +26,45 @@ namespace AI____Project_3
         public AreaMap()
         {
             InitializeTileMap(Rows, Columns);
+            EstablishTilePolicies();
         }
 
+        private void EstablishTilePolicies()
+        {
+            Tile currentTile;
+            List<Tile> adjacentTiles;
+
+            for (int r = 0; r < Rows; r++)
+            {
+                for (int c = 0; c < Columns; c++)
+                {
+                    currentTile = tiles[r, c];
+                    adjacentTiles = new List<Tile>();
+                    if (currentTile is FloorTile)
+                    {
+
+                        adjacentTiles.Add(GetTile(r, c - 1));
+                        adjacentTiles.Add(GetTile(r - 1, c));
+                        adjacentTiles.Add(GetTile(r, c + 1));
+                        adjacentTiles.Add(GetTile(r + 1, c));
+
+                        currentTile.AdjacentTiles = adjacentTiles;
+                    }
+                }
+            }
+        }
+
+        private Tile GetTile(int row, int column)
+        {
+            if (row >= 0 && row < Rows && column >= 0 && column < Columns)
+            {
+                return tiles[row, column];
+            }
+            else
+            {
+                return new WallTile();
+            }
+        }
 
         public Tile SelectRandomTile()
         {
@@ -38,10 +80,12 @@ namespace AI____Project_3
             randomTile = tiles[row, col];
             return randomTile;
         }
+
         private void InitializeTileMap(int row, int col)
         {
             tiles = new Tile[row, col];
-            string[] lines = System.IO.File.ReadAllLines("maze.txt");
+            string path = "../../../maze.txt";
+            string[] lines = System.IO.File.ReadAllLines(path);
 
             for (int r = 0; r < row; r++)
             {
@@ -57,25 +101,56 @@ namespace AI____Project_3
             policies[t] = p;
         }
 
-        public void IncreaseFrequency(Tile t, Policy p)
+        public void PrintQValue(int padding)
         {
+            int xOrigin = Console.CursorLeft + padding;
+            int yOrigin = Console.CursorTop + padding;
 
+            Console.WriteLine("POLICY QVALUE MAP");
+            for (int r = 0; r < Rows; r++)
+            {
+                for (int c = 0; c < Columns; c++)
+                {
+                    Console.SetCursorPosition(xOrigin + padding * c * 4, yOrigin + padding * r * 2);
+                    tiles[r, c].PrintQValue(padding);
+                }
+            }
+
+            Console.WriteLine("\n");
         }
 
-        public Policy GetOptimalPolicy(Tile t)
+        public void PrintFrequency(int padding)
         {
-            // the optimal policy is the policy with the largest Q value
-            // in a priority queue, this will always be the first value
+            int xOrigin = Console.CursorLeft + padding;
+            int yOrigin = Console.CursorTop + padding;
 
+            Console.WriteLine("POLICY FREQUENCY MAP");
+            for (int r = 0; r < Rows; r++)
+            {
+                for (int c = 0; c < Columns; c++)
+                {
+                    Console.SetCursorPosition(xOrigin + padding * c * 4, yOrigin + padding * r * 2);
+                    tiles[r, c].PrintFrequencies(padding);
+                }
+            }
 
-
+            Console.WriteLine("\n");
         }
 
-        public Policy GetRandomPolicy(Tile t)
+        public void PrintPolicies()
         {
+            Console.WriteLine("OPTIMAL POLICY MAP");
+            for (int r = 0; r < Rows; r++)
+            {
+                for (int c = 0; c < Columns; c++)
+                {
+                    tiles[r, c].PrintPolicies();
+                }
+                Console.WriteLine("\n");
+            }
 
+            Console.WriteLine();
         }
-
 
     }
 }

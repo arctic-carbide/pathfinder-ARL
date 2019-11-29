@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
+// AUTHOR: MITCHELL MYERS
+// DATE: 11/29/2019
+// TIME: 2:48 AM
+
 namespace AI____Project_3
 {
     class Agent
@@ -9,16 +13,21 @@ namespace AI____Project_3
         AreaMap map = new AreaMap();
         private Tile CurrentTile { get; set; }
         private const double RandomPolicyChance = 0.05;
-        private const double OptimalPolicyChance = 1.0 - RandomPolicyChance;
         private const double OnTargetTrajectoryChance = 0.8;
-        private const double DeviationChance = (1 - OnTargetTrajectoryChance) / 2.0;
+        private const double DeviationChance = 1.0 - OnTargetTrajectoryChance;
 
         public void Start(int trialsToRun)
         {
+            int pad = 3;
+            Console.WriteLine("Running...");
             for (int trialNumber = 1; trialNumber <= trialsToRun; trialNumber++)
             {
                 RunTrial();
             }
+
+            map.PrintFrequency(pad);
+            map.PrintQValue(pad);
+            map.PrintPolicies();
         }
 
         private void RunTrial()
@@ -38,8 +47,6 @@ namespace AI____Project_3
         {
             bool goalFound = false;
 
-            // goal: get to the goal
-            // for your current tile, 
 
             do
             {
@@ -55,12 +62,60 @@ namespace AI____Project_3
 
         private Tile NavigateToNewTile()
         {
-            Tile newTile = null;
+            Tile newTile;
             Policy action;
 
-            action = DetermineAction();
+            // there is an 80% chance we move to the target tile
+            // there is a 20% chance to drift left or right
 
-            return newTile;
+            action = DetermineAction();
+            newTile = Move(action);
+
+            if (!(newTile is WallTile))
+            {
+                action.Update(newTile);
+                return newTile;
+            }
+            else
+            {
+                action.Update(CurrentTile);
+                return CurrentTile;
+            }
+        }
+
+        private Tile Move(Policy p)
+        {
+            Random r = new Random();
+            Tile t;
+
+            if (r.NextDouble() > DeviationChance)
+            {
+                t = p.TargetTile;
+            }
+            else
+            {
+                t = Drift(p);
+            }
+
+            return t;
+        }
+
+        private Tile Drift(Policy p)
+        {
+            Random r = new Random();
+            Tile t;
+
+            if (r.Next() % 2 == 0)
+            {
+                t = p.LeftTile;
+            }
+            else
+            {
+                t = p.RightTile;
+            }
+
+            return t;
+            
         }
 
         private Policy DetermineAction()
@@ -70,11 +125,11 @@ namespace AI____Project_3
 
             if (r.NextDouble() > RandomPolicyChance)
             {
-                p = map.GetOptimalPolicy(CurrentTile);
+                p = CurrentTile.OptimalPolicy;
             }
             else
             {
-                p = map.GetRandomPolicy(CurrentTile);
+                p = CurrentTile.RandomPolicy;
             }
 
             return p;
